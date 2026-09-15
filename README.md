@@ -1,4 +1,4 @@
-﻿# 广金课表 PWA
+# 广金课表 PWA
 
 面向广东金融学院学生的手机网页课程表。它不是微信小程序，直接用浏览器打开即可；支持添加到手机桌面、离线查看，并通过学校强智教务系统导入课程。
 
@@ -43,19 +43,27 @@ http://192.168.1.10:4173
 
 服务端不会把学号、密码写入文件或数据库，也不会输出到日志。请求说明参考公开的 [GDUF-QZAPI](https://github.com/EwingYangs/GDUF-QZAPI) 文档。
 
-## 部署建议
+## 部署
 
-这个项目需要 Node 进程转发学校接口，不能只把 `public/` 放到纯静态托管上。可以部署到支持 Node.js 的平台，例如 Render、Railway、Fly.io 或自己的服务器。
+源代码仓库：
 
-公网部署必须配置 HTTPS。不要在不受信任的第三方网站上输入学校账号密码。
+https://github.com/zhouhuo-liang/gduf-timetable-pwa
 
-启动命令：
+GitHub Pages 只能托管静态文件，不能运行教务接口代理，所以完整版使用 GitHub 保存源代码，并通过 Vercel Serverless Functions 提供 `/api/session` 和 `/api/timetable`。
 
-```text
+Vercel 部署：
+
+```powershell
+npx vercel --prod
+```
+
+本地 Node 服务器仍可运行：
+
+```powershell
 node server.mjs
 ```
 
-平台通常会通过 `PORT` 环境变量指定端口，本项目会自动读取。
+公网部署必须配置 HTTPS。不要在不受信任的第三方网站上输入学校账号密码。
 
 ## 接口说明
 
