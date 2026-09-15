@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "gduf-timetable-pwa",
   "version": "0.1.0",
   "private": true,
@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
-    "check": "node --check server.mjs && node --check public/app.js && node --check public/sw.js"
+    "check": "node --check server.mjs && node --check lib/gduf.mjs && node --check lib/http.mjs && node --check api/session.mjs && node --check api/timetable.mjs && node --check public/app.js && node --check public/sw.js"
   },
   "engines": {
     "node": ">=20"
