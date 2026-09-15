@@ -1,0 +1,133 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#edf3fb" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="广金课表" />
+    <title>广金课表</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="termLabel">广东金融学院</p>
+          <h1><span id="weekTitle">第 1 周</span><span class="topbar-dot">·</span><span id="dayTitle">星期一</span></h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" id="refreshButton" type="button" title="刷新" aria-label="刷新课表">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4" /></svg>
+          </button>
+          <button class="icon-button" id="profileButton" type="button" title="我的" aria-label="打开我的信息">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="welcome-card" id="loginPanel">
+          <div class="welcome-badge">GDUF · 强智教务</div>
+          <h2>把广告课表换成自己的网站</h2>
+          <p class="welcome-copy">登录学校教务系统导入课表。账号密码仅用于换取本次登录 Token，不写入数据库，不保存密码。</p>
+          <form id="loginForm" class="login-form">
+            <label>
+              <span>学号</span>
+              <input id="studentId" name="studentId" inputmode="numeric" autocomplete="username" maxlength="20" placeholder="请输入学号" required />
+            </label>
+            <label>
+              <span>教务系统密码</span>
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" required />
+            </label>
+            <button class="primary-button" id="loginButton" type="submit">导入我的课表</button>
+          </form>
+          <button class="text-button" id="demoButton" type="button">没有账号？先看示例课表</button>
+          <p class="privacy-note">安全提示：公开部署时请使用 HTTPS。不要在不信任的网站上输入学校密码。</p>
+        </section>
+
+        <section class="loading-panel" id="loadingPanel" hidden>
+          <div class="spinner" aria-hidden="true"></div>
+          <strong>正在连接学校教务系统</strong>
+          <p>首次导入通常需要几秒钟，请不要关闭页面。</p>
+        </section>
+
+        <section class="schedule-panel" id="schedulePanel" hidden>
+          <div class="week-toolbar">
+            <button class="week-button" id="previousWeek" type="button" aria-label="上一周">‹</button>
+            <button class="week-center" id="weekPickerButton" type="button">
+              <span id="weekRange">本学期</span>
+              <small>点击切换周次</small>
+            </button>
+            <button class="week-button" id="nextWeek" type="button" aria-label="下一周">›</button>
+          </div>
+
+          <div class="schedule-scroll" id="scheduleScroll">
+            <div class="schedule-grid" id="scheduleGrid" aria-label="课程表"></div>
+          </div>
+
+          <p class="schedule-hint">左右滑动查看完整课表，点击课程可查看教师和教室。</p>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="主导航">
+        <button class="nav-item is-active" id="courseNav" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M8 3v4M16 3v4M4 10h16" /></svg>
+          <span>课程</span>
+        </button>
+        <button class="nav-item" id="todayNav" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" /><path d="M12 8v4l3 2" /></svg>
+          <span>今天</span>
+        </button>
+        <button class="nav-item" id="mineNav" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg>
+          <span>我的</span>
+        </button>
+      </nav>
+    </div>
+
+    <dialog class="sheet" id="courseDialog">
+      <form method="dialog">
+        <div class="sheet-handle"></div>
+        <div class="sheet-heading">
+          <h2 id="courseDialogTitle">课程详情</h2>
+          <button class="icon-button" value="close" aria-label="关闭">×</button>
+        </div>
+        <div class="course-detail" id="courseDetail"></div>
+      </form>
+    </dialog>
+
+    <dialog class="sheet" id="weekDialog">
+      <form method="dialog">
+        <div class="sheet-handle"></div>
+        <div class="sheet-heading">
+          <h2>选择周次</h2>
+          <button class="icon-button" value="close" aria-label="关闭">×</button>
+        </div>
+        <div class="week-options" id="weekOptions"></div>
+      </form>
+    </dialog>
+
+    <dialog class="sheet" id="profileDialog">
+      <form method="dialog">
+        <div class="sheet-handle"></div>
+        <div class="sheet-heading">
+          <h2>我的课表</h2>
+          <button class="icon-button" value="close" aria-label="关闭">×</button>
+        </div>
+        <div class="profile-card" id="profileCard"></div>
+        <div class="sheet-actions">
+          <button class="secondary-button" id="reimportButton" type="button">重新导入</button>
+          <button class="danger-button" id="logoutButton" type="button">切换账号</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

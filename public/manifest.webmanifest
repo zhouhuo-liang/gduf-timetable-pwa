@@ -1,0 +1,20 @@
+﻿{
+  "name": "广金课表",
+  "short_name": "广金课表",
+  "description": "广东金融学院强智教务课表，本地优先、无广告。",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#edf3fb",
+  "theme_color": "#edf3fb",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
